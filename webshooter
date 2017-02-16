@@ -13,29 +13,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# TO DO
+# vncserver :11 -geometry 1024x768
+# vncserver -clean -kill :11
+# $BROWSER --display :11 $URL &
+# xdotool key F11
+# import -display :11 -window $WINDOWID $N.jpg
+
 function main {
     local N=0
     local PID
     local WINDOWID
-
-    parse "$@"
 
     PID=$( pidof firefox )
     WID=$( wmctrl -lp | grep $PID | awk '{print $1}' )
 
     while read URL; do
         firefox $URL
-        sleep 10
+        sleep 15
         import -window $WID $N.jpg
+        convert -set comment "$URL" $N.jpg $N.jpg
         xdotool key --window $WID Ctrl+w
         N=$(( $N + 1 ))
     done
 }
 
 main "$@"
-
-#vncserver :11 -geometry 1024x768
-#vncserver -clean -kill :11
-#$BROWSER --display :11 $URL &
-#xdotool key F11
-#import -display :11 -window $WINDOWID $N.jpg
